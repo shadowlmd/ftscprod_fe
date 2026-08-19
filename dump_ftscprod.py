@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
+import os
+import sys
+
+
 def dump_fe(filepath="FTSCPROD.FE"):
+    if not os.path.exists(filepath):
+        print(f"Error: File {filepath} not found.")
+        return
+
     with open(filepath, "rb") as f:
         file_size_header = int.from_bytes(f.read(2), "little")
         data = f.read()
 
-    print(f"File: [`{filepath}`](FTSCPROD.FE)")
+    print(f"File: {filepath}")
     print(f"File size header: {file_size_header}, Actual data length: {len(data)}")
     print(f"{'Code (Hex)':<12} | {'Code (Dec)':<10} | {'Product Name'}")
     print("-" * 50)
@@ -29,7 +37,7 @@ def dump_fe(filepath="FTSCPROD.FE"):
             name_bytes = name_bytes[:null_idx]
         name = name_bytes.decode("latin1", errors="replace")
 
-        print(f"0x{code:04X}        | {code:<10} | {name}")
+        print(f"{code:04X}        | {code:<10} | {name}")
 
         pos += record_len
         count += 1
@@ -38,4 +46,5 @@ def dump_fe(filepath="FTSCPROD.FE"):
 
 
 if __name__ == "__main__":
-    dump_fe()
+    filepath = sys.argv[1] if len(sys.argv) > 1 else "FTSCPROD.FE"
+    dump_fe(filepath)
