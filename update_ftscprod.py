@@ -54,7 +54,7 @@ def parse_text_list(filepath):
             if len(parts) < 2:
                 continue
             code_str = parts[0].strip()
-            name = parts[1].split(",")[0].strip()
+            name = parts[1].split(",")[0].strip().replace("_", " ")
             try:
                 code = int(code_str, 16)
             except ValueError:
