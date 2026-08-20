@@ -101,7 +101,7 @@ def append_missing_entries(text_path, fe_path="FTSCPROD.FE"):
         new_records_bytes.extend(record)
         print(f"Adding code {code:04X}: {name}")
 
-    final_data = clean_data + new_records_bytes
+    final_data = clean_data + new_records_bytes + b"\x00\x00\x00\x00"
     total_size = len(final_data) + 2
     header_val = len(final_data)
 
