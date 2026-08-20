@@ -14,7 +14,7 @@ def dump_fe(filepath="FTSCPROD.FE"):
 
     print(f"File: {filepath}")
     print(f"File size header: {file_size_header}, Actual data length: {len(data)}")
-    print(f"{'Code (Hex)':<12} | {'Code (Dec)':<10} | {'Product Name'}")
+    print(f"{'Code (Hex)':<11} | {'Code (Dec)':<10} | {'Product Name'}")
     print("-" * 50)
 
     pos = 0
