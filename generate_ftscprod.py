@@ -6,6 +6,7 @@ from pathlib import Path
 
 MAX_RECORD_SIZE = 255
 MAX_NAME_LEN = MAX_RECORD_SIZE - 4
+EOF_MARKER = b"\x00\x00\x00\x00"
 
 
 def parse_text_list(filepath: str) -> list[tuple[int, str]]:
@@ -24,8 +25,8 @@ def parse_text_list(filepath: str) -> list[tuple[int, str]]:
         sys.exit(1)
 
     with path.open("r", encoding="latin1") as f:
-        for line in f:
-            line = line.strip()
+        for raw_line in f:
+            line = raw_line.strip()
             if not line:
                 continue
             parts = line.split(",", 1)
@@ -69,7 +70,7 @@ def generate_fe(text_path: str, fe_path: str = "FTSCPROD.FE") -> None:
         record = size_byte + code_bytes + name_bytes + null_byte
         records_bytes.extend(record)
 
-    final_data = records_bytes + b"\x00\x00\x00\x00"
+    final_data = records_bytes + EOF_MARKER
     total_size = len(final_data) + 2
     header_val = len(final_data)
 
