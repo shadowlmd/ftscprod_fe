@@ -4,12 +4,14 @@ import argparse
 import sys
 from pathlib import Path
 
-EOF_MARKER = b"\x00\x00\x00\x00"
-HEADER_SIZE = 2
-CODE_OFFSET_START = 1
-CODE_OFFSET_END = 3
-MIN_RECORD_BYTES = 4
-EOF_MARKER_SIZE = 4
+from settings import (
+    CODE_OFFSET_END,
+    CODE_OFFSET_START,
+    EOF_MARKER,
+    EOF_MARKER_SIZE,
+    HEADER_SIZE,
+    MIN_RECORD_BYTES,
+)
 
 
 def dump_product_database(db_path: str) -> None:
