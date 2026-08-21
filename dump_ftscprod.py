@@ -69,7 +69,8 @@ def dump_product_database(db_path: str) -> None:
         name_bytes = record_bytes[CODE_OFFSET_END:-1]
         name = name_bytes.decode("latin1", errors="replace")
 
-        print(f"{code:04X}        | {code:<10} | {name}")
+        code_hex = f"{code:04X}"
+        print(f"{code_hex:<11} | {code:<10} | {name}")
 
         pos += record_len
         count += 1
