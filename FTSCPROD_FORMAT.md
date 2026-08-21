@@ -19,8 +19,3 @@ Each individual product record contains:
 - **Product Code** (`2 bytes`): Unsigned 16-bit integer (little-endian) representing the FTSC product code (e.g., `0x0000`, `0x010A`).
 - **Product Name** (`N bytes`): C-style null-terminated ASCII/Latin1 string representing the product name.
 - **Null Terminator** (`1 byte`): `0x00` terminating the string.
-
-## Notes
-
-- Non-product placeholder entries (such as `0x00FE`, `0x00FF`, `0x0100`, and `0x0104`) should be excluded when updating binary databases from [`ftscprod.020`](ftscprod.020:23).
-- **Important**: Every valid [`FTSCPROD.FE`](FTSCPROD.FE:1) file must conclude with an essential End-of-File / End-of-Data marker (`b"\x00\x00\x00\x00"`) following the last product record to ensure correct parsing and termination by FastEcho.
