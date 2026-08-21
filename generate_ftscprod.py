@@ -6,7 +6,9 @@ import sys
 from pathlib import Path
 
 MAX_RECORD_SIZE = 255
-MAX_NAME_LEN = MAX_RECORD_SIZE - 4
+CODE_BYTE_SIZE = 2
+RECORD_HEADER_SIZE = 4
+MAX_NAME_LEN = MAX_RECORD_SIZE - RECORD_HEADER_SIZE
 EOF_MARKER = b"\x00\x00\x00\x00"
 MIN_ROW_ELEMENTS = 2
 
@@ -56,27 +58,27 @@ def generate_product_database(product_codes_path: str, product_db_path: str) -> 
     records_bytes = bytearray()
     for code, name in entries:
         name_bytes = name.encode("latin1", errors="replace")
-        size_val = len(name_bytes) + 4
+        size_val = len(name_bytes) + RECORD_HEADER_SIZE
         # Ensure record size fits within 1 byte (up to MAX_RECORD_SIZE)
         if size_val > MAX_RECORD_SIZE:
             print(f"WARNING: Record size exceeds {MAX_RECORD_SIZE} bytes for code {code:04X} ({len(name)} chars). Truncating product name.")
             name_bytes = name_bytes[:MAX_NAME_LEN]
-            size_val = len(name_bytes) + 4
+            size_val = len(name_bytes) + RECORD_HEADER_SIZE
 
         size_byte = bytes([size_val])
-        code_bytes = code.to_bytes(2, "little")
+        code_bytes = code.to_bytes(CODE_BYTE_SIZE, "little")
         null_byte = b"\x00"
 
         record = size_byte + code_bytes + name_bytes + null_byte
         records_bytes.extend(record)
 
     final_data = records_bytes + EOF_MARKER
-    total_size = len(final_data) + 2
+    total_size = len(final_data) + CODE_BYTE_SIZE
     header_val = len(final_data)
 
     target_path = Path(product_db_path)
     with target_path.open("wb") as f:
-        f.write(header_val.to_bytes(2, "little"))
+        f.write(header_val.to_bytes(CODE_BYTE_SIZE, "little"))
         f.write(final_data)
 
     print(f"Successfully generated {product_db_path}. Total file size: {total_size} bytes.")

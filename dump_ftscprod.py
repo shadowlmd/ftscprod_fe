@@ -5,6 +5,11 @@ import sys
 from pathlib import Path
 
 EOF_MARKER = b"\x00\x00\x00\x00"
+HEADER_SIZE = 2
+CODE_OFFSET_START = 1
+CODE_OFFSET_END = 3
+MIN_RECORD_BYTES = 4
+EOF_MARKER_SIZE = 4
 
 
 def dump_product_database(db_path: str) -> None:
@@ -15,12 +20,12 @@ def dump_product_database(db_path: str) -> None:
         sys.exit(1)
 
     raw_bytes = path.read_bytes()
-    if len(raw_bytes) < 2:
+    if len(raw_bytes) < HEADER_SIZE:
         print(f"Error: Database file {db_path} is too small.")
         sys.exit(1)
 
-    header_val = int.from_bytes(raw_bytes[:2], "little")
-    payload = raw_bytes[2:]
+    header_val = int.from_bytes(raw_bytes[:HEADER_SIZE], "little")
+    payload = raw_bytes[HEADER_SIZE:]
 
     if header_val != len(payload):
         print(f"Error: Database integrity check failed. Header size ({header_val}) does not match payload length ({len(payload)}).")
@@ -32,10 +37,10 @@ def dump_product_database(db_path: str) -> None:
 
     print(f"File: {db_path}")
     print(f"File size header: {header_val}, Actual payload length: {len(payload)}")
-    print(f"{'Code (Hex)':<11} | {'Code (Dec)':<10} | {'Product Name'}")
+    print("{:<11} | {:<10} | {}".format("Code (Hex)", "Code (Dec)", "Product Name"))
     print("-" * 50)
 
-    records_data = payload[:-4]
+    records_data = payload[:-EOF_MARKER_SIZE]
     pos = 0
     count = 0
     skipped = 0
@@ -53,14 +58,14 @@ def dump_product_database(db_path: str) -> None:
             break
 
         record_bytes = records_data[pos : pos + record_len]
-        if len(record_bytes) < 4 or record_bytes[-1] != 0x00:
+        if len(record_bytes) < MIN_RECORD_BYTES or record_bytes[-1] != 0x00:
             print(f"Error: Record at position {pos} has invalid format or length {len(record_bytes)}. Skipping record.")
             skipped += 1
             pos += record_len
             continue
 
-        code = int.from_bytes(record_bytes[1:3], "little")
-        name_bytes = record_bytes[3:-1]
+        code = int.from_bytes(record_bytes[CODE_OFFSET_START:CODE_OFFSET_END], "little")
+        name_bytes = record_bytes[CODE_OFFSET_END:-1]
         name = name_bytes.decode("latin1", errors="replace")
 
         print(f"{code:04X}        | {code:<10} | {name}")
