@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import csv
 import sys
 from pathlib import Path
 
@@ -24,16 +25,13 @@ def parse_text_list(filepath: str) -> list[tuple[int, str]]:
         print(f"Error: Text source file {filepath} not found.")
         sys.exit(1)
 
-    with path.open("r", encoding="latin1") as f:
-        for raw_line in f:
-            line = raw_line.strip()
-            if not line:
+    with path.open("r", encoding="latin1", newline="") as f:
+        reader = csv.reader(f)
+        for row in reader:
+            if not row or len(row) < 2:
                 continue
-            parts = line.split(",", 1)
-            if len(parts) < 2:
-                continue
-            code_str = parts[0].strip()
-            name = parts[1].split(",")[0].strip().replace("_", " ")
+            code_str = row[0].strip()
+            name = row[1].strip().replace("_", " ")
             try:
                 code = int(code_str, 16)
             except ValueError:
