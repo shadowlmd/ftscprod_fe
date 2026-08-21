@@ -1,10 +1,10 @@
 # FTSCPROD.FE Binary Format Specification
 
-This document describes the binary file format of [`FTSCPROD.FE`](FTSCPROD.FE:1) used by FastEcho for product code lookup.
+This document describes the binary file format of the FastEcho FTSCPROD database [`FTSCPROD.FE`](FTSCPROD.FE:1) used by FastEcho for product code lookup.
 
 ## File Structure
 
-[`FTSCPROD.FE`](FTSCPROD.FE:1) consists of:
+The FastEcho FTSCPROD database [`FTSCPROD.FE`](FTSCPROD.FE:1) consists of:
 1. **File Header** (2 bytes):
    - Unsigned 16-bit integer (little-endian) representing the total size of the records payload (total file size minus 2 bytes).
 2. **Product Records** (variable length sequence):

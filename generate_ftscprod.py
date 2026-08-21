@@ -43,14 +43,14 @@ def parse_ftsc_product_codes(product_codes_path: str) -> list[tuple[int, str]]:
     return entries
 
 
-def generate_product_database(product_codes_path: str, product_db_path: str) -> None:
-    """Generate binary FTSCPROD.FE database file from FTSC Product Codes source."""
+def generate_product_database(product_codes_path: str, fastecho_db_path: str) -> None:
+    """Generate FastEcho FTSCPROD database FTSCPROD.FE from FTSC Product Codes file."""
     entries = parse_ftsc_product_codes(product_codes_path)
     if not entries:
         print(f"No valid entries found in {product_codes_path}.")
         return
 
-    print(f"Generating {product_db_path} from {product_codes_path} with {len(entries)} entries:")
+    print(f"Generating {fastecho_db_path} from {product_codes_path} with {len(entries)} entries:")
 
     records_bytes = bytearray()
     for code, name in entries:
@@ -73,25 +73,25 @@ def generate_product_database(product_codes_path: str, product_db_path: str) -> 
     total_size = len(final_data) + CODE_BYTE_SIZE
     header_val = len(final_data)
 
-    target_path = Path(product_db_path)
+    target_path = Path(fastecho_db_path)
     with target_path.open("wb") as f:
         f.write(header_val.to_bytes(CODE_BYTE_SIZE, "little"))
         f.write(final_data)
 
-    print(f"Successfully generated {product_db_path}. Total file size: {total_size} bytes.")
+    print(f"Successfully generated {fastecho_db_path}. Total file size: {total_size} bytes.")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generate binary FTSCPROD.FE database file from FTSC Product Codes source.")
+    parser = argparse.ArgumentParser(description="Generate FastEcho FTSCPROD database FTSCPROD.FE from FTSC Product Codes file.")
     parser.add_argument(
         "product_codes_path",
         help="Path to the FTSC Product Codes file (obtained from http://ftsc.org/docs/ under Miscellaneous Administrative Files)",
     )
     parser.add_argument(
-        "product_db_path",
+        "fastecho_db_path",
         nargs="?",
         default="FTSCPROD.FE",
-        help="Path to the output binary FTSCPROD.FE database file (default: FTSCPROD.FE)",
+        help="Path to the output FastEcho FTSCPROD database file (default: FTSCPROD.FE)",
     )
     args = parser.parse_args()
-    generate_product_database(args.product_codes_path, args.product_db_path)
+    generate_product_database(args.product_codes_path, args.fastecho_db_path)

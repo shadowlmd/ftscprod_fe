@@ -1,10 +1,10 @@
 # FTSC Product Database Tools
 
-Utilities for working with the FastEcho [`FTSCPROD.FE`](FTSCPROD.FE:1) binary product code database.
+Utilities for working with the FastEcho FTSCPROD database [`FTSCPROD.FE`](FTSCPROD.FE:3).
 
 ## Overview
 
-This repository provides Python scripts to generate and inspect the FastEcho product code binary database file [`FTSCPROD.FE`](FTSCPROD.FE:1).
+This repository provides Python scripts to generate and inspect the FastEcho FTSCPROD database file [`FTSCPROD.FE`](FTSCPROD.FE:3).
 
 ## Source Data
 
@@ -13,20 +13,20 @@ The FTSC Product Codes source text database can be obtained from [FTSC Documenta
 ## Scripts
 
 ### 1. Dump Database (`dump_ftscprod.py`)
-Inspects and dumps contents of the binary [`FTSCPROD.FE`](FTSCPROD.FE:1) file.
+Inspects and dumps contents of the FastEcho FTSCPROD database [`FTSCPROD.FE`](FTSCPROD.FE:3).
 ```bash
-dump_ftscprod.py [filepath]
+dump_ftscprod.py [fastecho_db_path]
 ```
-- **Arguments**: Optional path to the binary [`FTSCPROD.FE`](FTSCPROD.FE:1) file (defaults to `FTSCPROD.FE`).
+- **Arguments**: Optional path to the FastEcho FTSCPROD database file (defaults to `FTSCPROD.FE`).
 
 ### 2. Generate Database (`generate_ftscprod.py`)
-Generates the binary [`FTSCPROD.FE`](FTSCPROD.FE:1) file from the FTSC Product Codes source file.
+Generates the FastEcho FTSCPROD database [`FTSCPROD.FE`](FTSCPROD.FE:3) from the FTSC Product Codes file.
 ```bash
-generate_ftscprod.py product_codes_path [fe_target]
+generate_ftscprod.py product_codes_path [fastecho_db_path]
 ```
 - **Arguments**:
   - `product_codes_path`: Path to the input FTSC Product Codes file.
-  - `fe_target`: Path to the output binary file (defaults to `FTSCPROD.FE`).
+  - `fastecho_db_path`: Path to the output FastEcho FTSCPROD database file (defaults to `FTSCPROD.FE`).
 
 ## Implementation Notes
 

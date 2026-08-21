@@ -13,16 +13,16 @@ from settings import (
 )
 
 
-def dump_product_database(db_path: str) -> None:
-    """Dump binary FTSCPROD.FE database file contents and product codes with integrity checks."""
-    path = Path(db_path)
+def dump_product_database(fastecho_db_path: str) -> None:
+    """Dump FastEcho FTSCPROD database FTSCPROD.FE file contents and product codes with integrity checks."""
+    path = Path(fastecho_db_path)
     if not path.exists():
-        print(f"Error: Database file {db_path} not found.")
+        print(f"Error: FastEcho FTSCPROD database file {fastecho_db_path} not found.")
         sys.exit(1)
 
     raw_bytes = path.read_bytes()
     if len(raw_bytes) < HEADER_SIZE:
-        print(f"Error: Database file {db_path} is too small.")
+        print(f"Error: FastEcho FTSCPROD database file {fastecho_db_path} is too small.")
         sys.exit(1)
 
     header_val = int.from_bytes(raw_bytes[:HEADER_SIZE], "little")
@@ -36,7 +36,7 @@ def dump_product_database(db_path: str) -> None:
         print("Error: Database integrity check failed. Missing required End-of-File (EoF) marker.")
         sys.exit(1)
 
-    print(f"File: {db_path}")
+    print(f"File: {fastecho_db_path}")
     print(f"File size header: {header_val}, Actual payload length: {len(payload)}")
     print("{:<11} | {:<10} | {}".format("Code (Hex)", "Code (Dec)", "Product Name"))
     print("-" * 50)
@@ -79,12 +79,12 @@ def dump_product_database(db_path: str) -> None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Dump binary FTSCPROD.FE database file contents and product codes.")
+    parser = argparse.ArgumentParser(description="Dump FastEcho FTSCPROD database FTSCPROD.FE file contents and product codes.")
     parser.add_argument(
-        "db_path",
+        "fastecho_db_path",
         nargs="?",
         default="FTSCPROD.FE",
-        help="Path to the binary FTSCPROD.FE database file (default: FTSCPROD.FE)",
+        help="Path to the FastEcho FTSCPROD database file (default: FTSCPROD.FE)",
     )
     args = parser.parse_args()
-    dump_product_database(args.db_path)
+    dump_product_database(args.fastecho_db_path)
