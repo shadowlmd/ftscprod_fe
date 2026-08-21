@@ -57,9 +57,9 @@ def generate_product_database(product_codes_path: str, product_db_path: str) -> 
     for code, name in entries:
         name_bytes = name.encode("latin1", errors="replace")
         size_val = len(name_bytes) + 4
-        # Ensure record size fits within 1 byte (max MAX_RECORD_SIZE)
+        # Ensure record size fits within 1 byte (up to MAX_RECORD_SIZE)
         if size_val > MAX_RECORD_SIZE:
-            print(f"WARNING: Record size exceeds {MAX_RECORD_SIZE} for code {code:04X} ({len(name)} chars). Truncating product name.")
+            print(f"WARNING: Record size exceeds {MAX_RECORD_SIZE} bytes for code {code:04X} ({len(name)} chars). Truncating product name.")
             name_bytes = name_bytes[:MAX_NAME_LEN]
             size_val = len(name_bytes) + 4
 
