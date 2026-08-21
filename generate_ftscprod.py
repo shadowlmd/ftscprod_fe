@@ -8,6 +8,7 @@ from pathlib import Path
 MAX_RECORD_SIZE = 255
 MAX_NAME_LEN = MAX_RECORD_SIZE - 4
 EOF_MARKER = b"\x00\x00\x00\x00"
+MIN_ROW_ELEMENTS = 2
 
 
 def parse_ftsc_product_codes(product_codes_path: str) -> list[tuple[int, str]]:
@@ -28,7 +29,7 @@ def parse_ftsc_product_codes(product_codes_path: str) -> list[tuple[int, str]]:
     with path.open("r", encoding="latin1", newline="") as f:
         reader = csv.reader(f)
         for row in reader:
-            if not row or len(row) < 2:
+            if not row or len(row) < MIN_ROW_ELEMENTS:
                 continue
             code_str = row[0].strip()
             name = row[1].strip().replace("_", " ")
