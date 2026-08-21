@@ -4,6 +4,9 @@ import argparse
 import sys
 from pathlib import Path
 
+MAX_RECORD_SIZE = 255
+MAX_NAME_LEN = MAX_RECORD_SIZE - 4
+
 
 def parse_text_list(filepath: str) -> list[tuple[int, str]]:
     """Parse text product list file provided."""
@@ -53,11 +56,10 @@ def generate_fe(text_path: str, fe_path: str = "FTSCPROD.FE") -> None:
     for code, name in entries:
         name_bytes = name.encode("latin1", errors="replace")
         size_val = len(name_bytes) + 4
-        # Ensure record size fits within 1 byte (max 255)
-        if size_val > 255:
-            print(f"WARNING: Record size exceeds 255 for code {code:04X} ({len(name)} chars). Truncating product name.")
-            max_name_len = 251
-            name_bytes = name_bytes[:max_name_len]
+        # Ensure record size fits within 1 byte (max MAX_RECORD_SIZE)
+        if size_val > MAX_RECORD_SIZE:
+            print(f"WARNING: Record size exceeds {MAX_RECORD_SIZE} for code {code:04X} ({len(name)} chars). Truncating product name.")
+            name_bytes = name_bytes[:MAX_NAME_LEN]
             size_val = len(name_bytes) + 4
 
         size_byte = bytes([size_val])
@@ -71,7 +73,8 @@ def generate_fe(text_path: str, fe_path: str = "FTSCPROD.FE") -> None:
     total_size = len(final_data) + 2
     header_val = len(final_data)
 
-    with Path(fe_path).open("wb") as f:
+    target_path = Path(fe_path)
+    with target_path.open("wb") as f:
         f.write(header_val.to_bytes(2, "little"))
         f.write(final_data)
 
