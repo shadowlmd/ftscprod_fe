@@ -41,7 +41,7 @@ def dump_product_database(db_path: str) -> None:
     print("{:<11} | {:<10} | {}".format("Code (Hex)", "Code (Dec)", "Product Name"))
     print("-" * 50)
 
-    records_data = payload[:-len(EOF_MARKER)]
+    records_data = payload[: -len(EOF_MARKER)]
     pos = 0
     count = 0
     skipped = 0
