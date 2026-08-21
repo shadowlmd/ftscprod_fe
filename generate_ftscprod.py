@@ -10,9 +10,9 @@ MAX_NAME_LEN = MAX_RECORD_SIZE - 4
 EOF_MARKER = b"\x00\x00\x00\x00"
 
 
-def parse_text_list(filepath: str) -> list[tuple[int, str]]:
-    """Parse text product list file provided."""
-    path = Path(filepath)
+def parse_ftsc_product_codes(product_codes_path: str) -> list[tuple[int, str]]:
+    """Parse FTSC Product Codes CSV file."""
+    path = Path(product_codes_path)
     entries: list[tuple[int, str]] = []
     # Exclude non-product placeholder codes:
     # 0x00FE: No_product_id_allocated
@@ -22,7 +22,7 @@ def parse_text_list(filepath: str) -> list[tuple[int, str]]:
     exclude_codes = {0x00FE, 0x00FF, 0x0100, 0x0104}
 
     if not path.exists():
-        print(f"Error: Text source file {filepath} not found.")
+        print(f"Error: FTSC Product Codes file {product_codes_path} not found.")
         sys.exit(1)
 
     with path.open("r", encoding="latin1", newline="") as f:
@@ -43,14 +43,14 @@ def parse_text_list(filepath: str) -> list[tuple[int, str]]:
     return entries
 
 
-def generate_fe(text_path: str, fe_path: str = "FTSCPROD.FE") -> None:
-    """Generate binary FTSCPROD.FE file from text product list."""
-    entries = parse_text_list(text_path)
+def generate_fe(product_codes_path: str, fe_path: str = "FTSCPROD.FE") -> None:
+    """Generate binary FTSCPROD.FE file from FTSC Product Codes source."""
+    entries = parse_ftsc_product_codes(product_codes_path)
     if not entries:
-        print(f"No valid entries found in {text_path}.")
+        print(f"No valid entries found in {product_codes_path}.")
         return
 
-    print(f"Generating {fe_path} from {text_path} with {len(entries)} entries:")
+    print(f"Generating {fe_path} from {product_codes_path} with {len(entries)} entries:")
 
     records_bytes = bytearray()
     for code, name in entries:
@@ -82,10 +82,10 @@ def generate_fe(text_path: str, fe_path: str = "FTSCPROD.FE") -> None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generate binary FTSCPROD.FE file from text product list.")
+    parser = argparse.ArgumentParser(description="Generate binary FTSCPROD.FE file from FTSC Product Codes source.")
     parser.add_argument(
-        "text_source",
-        help="Path to the product codes text file",
+        "product_codes_path",
+        help="Path to the FTSC Product Codes file (obtained from http://ftsc.org/docs/ under Miscellaneous Administrative Files)",
     )
     parser.add_argument(
         "fe_target",
@@ -94,4 +94,4 @@ if __name__ == "__main__":
         help="Path to the output binary FTSCPROD.FE file (default: FTSCPROD.FE)",
     )
     args = parser.parse_args()
-    generate_fe(args.text_source, args.fe_target)
+    generate_fe(args.product_codes_path, args.fe_target)
