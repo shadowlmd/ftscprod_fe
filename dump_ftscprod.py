@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 
-import os
-import sys
+import argparse
+from pathlib import Path
 
 
-def dump_fe(filepath="FTSCPROD.FE"):
-    if not os.path.exists(filepath):
+def dump_fe(filepath: str = "FTSCPROD.FE") -> None:
+    """Dump binary FTSCPROD.FE file contents and product codes."""
+    path = Path(filepath)
+    if not path.exists():
         print(f"Error: File {filepath} not found.")
         return
 
-    with open(filepath, "rb") as f:
+    with path.open("rb") as f:
         file_size_header = int.from_bytes(f.read(2), "little")
         data = f.read()
 
@@ -47,5 +49,12 @@ def dump_fe(filepath="FTSCPROD.FE"):
 
 
 if __name__ == "__main__":
-    filepath = sys.argv[1] if len(sys.argv) > 1 else "FTSCPROD.FE"
-    dump_fe(filepath)
+    parser = argparse.ArgumentParser(description="Dump binary FTSCPROD.FE file contents and product codes.")
+    parser.add_argument(
+        "filepath",
+        nargs="?",
+        default="FTSCPROD.FE",
+        help="Path to the binary FTSCPROD.FE file (default: FTSCPROD.FE)",
+    )
+    args = parser.parse_args()
+    dump_fe(args.filepath)

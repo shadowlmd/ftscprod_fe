@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 
-import os
+import argparse
 import sys
+from pathlib import Path
 
 
-def parse_text_list(filepath):
-    """Parse text product list file provided on command line."""
-    entries = []
+def parse_text_list(filepath: str) -> list[tuple[int, str]]:
+    """Parse text product list file provided."""
+    path = Path(filepath)
+    entries: list[tuple[int, str]] = []
     # Exclude non-product placeholder codes:
     # 0x00FE: No_product_id_allocated
     # 0x00FF: 16-bit_product_id
@@ -14,11 +16,11 @@ def parse_text_list(filepath):
     # 0x0104: None
     exclude_codes = {0x00FE, 0x00FF, 0x0100, 0x0104}
 
-    if not os.path.exists(filepath):
+    if not path.exists():
         print(f"Error: Text source file {filepath} not found.")
         sys.exit(1)
 
-    with open(filepath, "r", encoding="latin1") as f:
+    with path.open("r", encoding="latin1") as f:
         for line in f:
             line = line.strip()
             if not line:
@@ -38,7 +40,8 @@ def parse_text_list(filepath):
     return entries
 
 
-def generate_fe(text_path, fe_path="FTSCPROD.FE"):
+def generate_fe(text_path: str, fe_path: str = "FTSCPROD.FE") -> None:
+    """Generate binary FTSCPROD.FE file from text product list."""
     entries = parse_text_list(text_path)
     if not entries:
         print(f"No valid entries found in {text_path}.")
@@ -68,7 +71,7 @@ def generate_fe(text_path, fe_path="FTSCPROD.FE"):
     total_size = len(final_data) + 2
     header_val = len(final_data)
 
-    with open(fe_path, "wb") as f:
+    with Path(fe_path).open("wb") as f:
         f.write(header_val.to_bytes(2, "little"))
         f.write(final_data)
 
@@ -76,11 +79,16 @@ def generate_fe(text_path, fe_path="FTSCPROD.FE"):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print(f"Usage: python3 {sys.argv[0]} <product_codes_text_file> [binary_fe_file]")
-        print("Error: Product codes source filename must be specified on the command line.")
-        sys.exit(1)
-
-    text_source = sys.argv[1]
-    fe_target = sys.argv[2] if len(sys.argv) > 2 else "FTSCPROD.FE"
-    generate_fe(text_source, fe_target)
+    parser = argparse.ArgumentParser(description="Generate binary FTSCPROD.FE file from text product list.")
+    parser.add_argument(
+        "text_source",
+        help="Path to the product codes text file",
+    )
+    parser.add_argument(
+        "fe_target",
+        nargs="?",
+        default="FTSCPROD.FE",
+        help="Path to the output binary FTSCPROD.FE file (default: FTSCPROD.FE)",
+    )
+    args = parser.parse_args()
+    generate_fe(args.text_source, args.fe_target)
