@@ -44,7 +44,7 @@ def parse_ftsc_product_codes(product_codes_path: str) -> list[tuple[int, str]]:
     return entries
 
 
-def generate_fe(product_codes_path: str, fe_path: str = "FTSCPROD.FE") -> None:
+def generate_fe(product_codes_path: str, fe_path: str) -> None:
     """Generate binary FTSCPROD.FE file from FTSC Product Codes source."""
     entries = parse_ftsc_product_codes(product_codes_path)
     if not entries:

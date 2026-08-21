@@ -4,7 +4,7 @@ import argparse
 from pathlib import Path
 
 
-def dump_fe(filepath: str = "FTSCPROD.FE") -> None:
+def dump_fe(filepath: str) -> None:
     """Dump binary FTSCPROD.FE file contents and product codes."""
     path = Path(filepath)
     if not path.exists():
