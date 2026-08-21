@@ -9,7 +9,6 @@ from settings import (
     CODE_BYTE_SIZE,
     EOF_MARKER,
     EXCLUDE_CODES,
-    MAX_NAME_LEN,
     MAX_RECORD_SIZE,
     MIN_ROW_ELEMENTS,
     RECORD_HEADER_SIZE,
@@ -60,7 +59,7 @@ def generate_product_database(product_codes_path: str, product_db_path: str) -> 
         # Ensure record size fits within 1 byte (up to MAX_RECORD_SIZE)
         if size_val > MAX_RECORD_SIZE:
             print(f"WARNING: Record size exceeds {MAX_RECORD_SIZE} bytes for code {code:04X} ({len(name)} chars). Truncating product name.")
-            name_bytes = name_bytes[:MAX_NAME_LEN]
+            name_bytes = name_bytes[:MAX_RECORD_SIZE - RECORD_HEADER_SIZE]
             size_val = len(name_bytes) + RECORD_HEADER_SIZE
 
         size_byte = bytes([size_val])

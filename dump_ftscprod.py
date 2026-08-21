@@ -8,7 +8,6 @@ from settings import (
     CODE_OFFSET_END,
     CODE_OFFSET_START,
     EOF_MARKER,
-    EOF_MARKER_SIZE,
     HEADER_SIZE,
     MIN_RECORD_BYTES,
 )
@@ -42,7 +41,7 @@ def dump_product_database(db_path: str) -> None:
     print("{:<11} | {:<10} | {}".format("Code (Hex)", "Code (Dec)", "Product Name"))
     print("-" * 50)
 
-    records_data = payload[:-EOF_MARKER_SIZE]
+    records_data = payload[:-len(EOF_MARKER)]
     pos = 0
     count = 0
     skipped = 0
