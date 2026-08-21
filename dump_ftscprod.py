@@ -4,18 +4,18 @@ import argparse
 from pathlib import Path
 
 
-def dump_fe(filepath: str) -> None:
-    """Dump binary FTSCPROD.FE file contents and product codes."""
-    path = Path(filepath)
+def dump_product_database(db_path: str) -> None:
+    """Dump binary FTSCPROD.FE database file contents and product codes."""
+    path = Path(db_path)
     if not path.exists():
-        print(f"Error: File {filepath} not found.")
+        print(f"Error: Database file {db_path} not found.")
         return
 
     with path.open("rb") as f:
         file_size_header = int.from_bytes(f.read(2), "little")
         data = f.read()
 
-    print(f"File: {filepath}")
+    print(f"File: {db_path}")
     print(f"File size header: {file_size_header}, Actual data length: {len(data)}")
     print(f"{'Code (Hex)':<11} | {'Code (Dec)':<10} | {'Product Name'}")
     print("-" * 50)
@@ -49,12 +49,12 @@ def dump_fe(filepath: str) -> None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Dump binary FTSCPROD.FE file contents and product codes.")
+    parser = argparse.ArgumentParser(description="Dump binary FTSCPROD.FE database file contents and product codes.")
     parser.add_argument(
-        "filepath",
+        "db_path",
         nargs="?",
         default="FTSCPROD.FE",
-        help="Path to the binary FTSCPROD.FE file (default: FTSCPROD.FE)",
+        help="Path to the binary FTSCPROD.FE database file (default: FTSCPROD.FE)",
     )
     args = parser.parse_args()
-    dump_fe(args.filepath)
+    dump_product_database(args.db_path)
