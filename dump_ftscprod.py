@@ -32,7 +32,7 @@ def dump_product_database(db_path: str) -> None:
         sys.exit(1)
 
     if not payload.endswith(EOF_MARKER):
-        print(f"Error: Database integrity check failed. Missing required End-of-File (EoF) marker.")
+        print("Error: Database integrity check failed. Missing required End-of-File (EoF) marker.")
         sys.exit(1)
 
     print(f"File: {db_path}")
