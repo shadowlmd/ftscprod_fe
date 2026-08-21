@@ -15,14 +15,14 @@ The FTSC Product Codes source text database can be obtained from [FTSC Documenta
 ### 1. Dump Database (`dump_ftscprod.py`)
 Inspects and dumps contents of the binary [`FTSCPROD.FE`](FTSCPROD.FE:1) file.
 ```bash
-python3 dump_ftscprod.py [filepath]
+./dump_ftscprod.py [filepath]
 ```
 - **Arguments**: Optional path to the binary [`FTSCPROD.FE`](FTSCPROD.FE:1) file (defaults to `FTSCPROD.FE`).
 
 ### 2. Generate Database (`generate_ftscprod.py`)
 Generates the binary [`FTSCPROD.FE`](FTSCPROD.FE:1) file from the FTSC Product Codes source file.
 ```bash
-python3 generate_ftscprod.py product_codes_path [fe_target]
+./generate_ftscprod.py product_codes_path [fe_target]
 ```
 - **Arguments**:
   - `product_codes_path`: Path to the input FTSC Product Codes file.
