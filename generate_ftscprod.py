@@ -35,6 +35,7 @@ def parse_text_list(filepath: str) -> list[tuple[int, str]]:
             try:
                 code = int(code_str, 16)
             except ValueError:
+                print(f"Warning: Could not parse product code '{code_str}' in row: {row}")
                 continue
             if code in exclude_codes:
                 continue
