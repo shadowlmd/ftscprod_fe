@@ -16,6 +16,6 @@ The FastEcho FTSCPROD database [`FTSCPROD.FE`](FTSCPROD.FE:1) consists of:
 
 Each individual product record contains:
 - **Size Byte** (`1 byte`): Total length of the record in bytes. It covers itself (1 byte), the product code (2 bytes), the product name string length ($N$ bytes), and the null terminator (1 byte), resulting in `len(product_name) + 4`. Since the size is stored in a single byte, product names longer than 251 characters must be truncated to ensure the total record size does not exceed 255 bytes.
-- **Product Code** (`2 bytes`): Unsigned 16-bit integer (little-endian) representing the FTSC product code (e.g., `0x0000`, `0x010A`).
+- **Product Code** (`2 bytes`): Unsigned 16-bit integer (little-endian) representing the FTSC product code (e.g., `0x00FE`, `0x0100`).
 - **Product Name** (`N bytes`): ASCII/Latin1 string representing the product name.
 - **Null Terminator** (`1 byte`): `0x00` terminating the string at the end of the record.
